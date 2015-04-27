@@ -1,0 +1,123 @@
+{% extends "xchange/base.html" %}
+{% block content %}
+<script>
+function getID(id) {
+  var el = document.getElementById(id);
+  var show_div = document.getElementById('showcomments-' + id);
+  if ( el.style.display != 'none' ) {
+    el.style.display = 'none';
+    show_div.innerHTML = 'Show Comments';
+  }
+  else {
+    el.style.display = 'block';
+    show_div.innerHTML = 'Hide Comments';
+  }
+}
+</script>
+
+  <div class="container">
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-3 col-md-offset-2">
+          {% if user.id %}
+          <img class="img-rounded" src="{% url 'photo' user.id %}" width="200px">
+          <h2>&nbsp&nbsp&nbsp&nbsp<a href="/editprofile" class="btn btn-default">Edit your profile</a>
+          {% endif %}
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            <h1>{{user.username}}</h1>
+            <h4>{{user.first_name}} {{user.last_name}}</h4>
+            <h4 class="bio "><small>{{user.xchangeuser.bio}}</small></h4>
+            <br>
+            {% if hasfollow == "unfollow" %}
+            <form method="post" action="{% url 'unfollow' user.id %}">
+              <button type="submit" class="btn btn-warning">Unfollow</button>
+              {% csrf_token %}
+            </form>
+            {% elif hasfollow == "follow" %}
+            <form method="post" action="{% url 'follow' user.id %}">
+              <button type="submit" class="btn btn-primary">Follow</button>
+              {% csrf_token %}
+            </form>
+            {% endif %}
+       </div>
+     </div>
+
+      <div class="row offset1 span10">
+        {% for item in items %}
+      <!-- the actual xchange post: title/author/date/content -->
+      <div class="post-item">
+        <hr>
+        <div class="row">
+          <div class="row">
+            <div class="col-md-6 col-md-offset-0">
+              <a class="pull-left col-md-offset-0" href="{% url 'profile' item.xchangeuser.user.id %}">
+                <img src="{% url 'photo' item.xchangeuser.user.id %}" width="35px" class="img-rounded">
+              </a>
+              <div class="media-body">
+                <p> &nbsp Posted by <a href="{% url 'profile' item.xchangeuser.user.id %}">{{item.xchangeuser.user.username}}</a> at {{item.created}}</p>
+              </div>
+            </div>
+            {% if myself %}
+            <div class="col-md-1 col-md-offset-4">
+              <form action="/delete/{{item.id}}" method="post">
+                {% csrf_token %}
+                &nbsp&nbsp&nbsp&nbsp<input type="submit" value="Delete" class="btn btn-info">
+              </form>
+            </div>
+            {% endif %}
+          </div>
+        <div>
+          <div>
+            <p class="pull-left col-md-offset-3" ><img class="img-rounded" src="{% url 'itemphoto' item.id %}" width="180px" height="160px"></p>
+          </div>
+          <div>
+            <h5><p class="post col-md-offset-3"> &nbsp  &nbsp {{item.itemname}} &nbsp  ${{item.itemprice}}</p></h5>
+            <h5><small><p class="description">&nbsp  &nbsp &nbsp {{item}}</p></small></h5>
+          </div>
+        </div>
+        </div>
+            <br />
+            <div>&nbsp &nbsp 
+              <button type="button" id="showcomments-{{item.id}}" onclick='getID({{item.id}})' class="btn btn-default col-md-offset-3" data-toggle="tooltip" data-placement="top" title="Interested? Leave a comment!">Show Comments</button>
+            </div>
+          
+      
+
+        <div id="{{item.id}}" style="display:none">
+          <div>
+            <textarea class="field span10 offset3" rows="3" maxlength="50" id="comment-content-{{item.id}}"></textarea> <br> <br>
+            <div class="comment-button">
+              <button onclick="addcomment({{item.id}})" class="btn btn-info offset3">
+                <i class="glyphicon glyphicon-comment"></i> Add Comment
+              </button>
+            </div>
+          </div>
+
+          <div id="comment-{{item.id}}">
+                <br>
+               <table class="table table-hover table-condensed">
+                {% for comment in item.comment_set.all %}
+                <tr>
+                    <td class="col-md-8 col-md-offset-0"><p class="comment-post">{{comment.text}}</p></td>
+                    <td class="col-md-3 col-md-offset-3"><a class="pull-left" href="{% url 'profile' comment.xchangeuser.user.id %}">
+                      <img class="img-circle" src="{% url 'photo' comment.xchangeuser.user.id %}" width="35px"> </a>
+                      <a href="{% url 'profile' comment.xchangeuser.user.id %}">&nbsp{{comment.xchangeuser.user}}</a> 
+                      <p>{{comment.created}}</p>
+                    </td>                               
+                </tr>  
+                {% endfor %}         
+              </table>          
+            
+          </div>
+        </div>
+
+      </div>
+    {% endfor %}
+        <hr>
+    </div>
+  
+  </div>
+{% endblock %}
+

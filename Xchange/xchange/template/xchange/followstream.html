@@ -1,0 +1,109 @@
+{% extends "xchange/base.html" %}
+
+{% block page-header %}
+{% load staticfiles %}
+
+<script src="{% static 'xchange/js/bootstrap.js' %}"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>
+function getID(id) {
+  var el = document.getElementById(id);
+  var show_div = document.getElementById('showcomments-' + id);
+  if ( el.style.display != 'none' ) {
+    el.style.display = 'none';
+    show_div.innerHTML = 'Show Comments';
+  }
+  else {
+    el.style.display = 'block';
+    show_div.innerHTML = 'Hide Comments';
+  }
+}
+</script>
+
+<!-- <div class="jumbotron offset3 span12"> -->
+<div class="row-fluid">
+  <div class="span8 offset2">
+    <!-- <div class="page-header"> -->
+    <div class="hero-unit">
+      <center>
+      <h3>Welcome to CMU Xchange!</h3>
+      <br />
+      <h4>Now take a look at all of the posts of the members you've followed!</h4>
+    </center>
+    </div>
+</div> 
+</div>
+{% endblock %}
+
+{% block content %}
+    <!-- <div class="row offset4 span10"> -->
+<div class="row-fluid">
+  <div class="span8 offset2" id="postlist">
+    {{errors}}
+    {% for item in items %}
+      <!-- the actual xchange post: title/author/date/content -->
+      <div class="post-item">
+        <hr>
+        <div class="row">
+        <div>
+          <a class="pull-left col-md-offset-0" href="{% url 'profile' item.xchangeuser.user.id %}">
+            <img src="{% url 'photo' item.xchangeuser.user.id %}" width="35px" class="img-rounded">
+          </a>
+          <div class="media-body">
+            <p> &nbsp Posted by <a href="{% url 'profile' item.xchangeuser.user.id %}">{{item.xchangeuser.user.username}}</a> at {{item.created}}</p>
+          </div>
+        </div>
+        <div>
+          <div>
+            <p class="pull-left col-md-offset-3" ><img class="img-rounded" src="{% url 'itemphoto' item.id %}" width="180px" height="160px"></p>
+          </div>
+          <div>
+            <h5><p class="post col-md-offset-3"> &nbsp  &nbsp {{item.itemname}} &nbsp  ${{item.itemprice}}</p></h5>
+            <h5><small><p class="description">&nbsp  &nbsp &nbsp {{item}}</p></small></h5>
+          </div>
+        </div>
+      </div>
+
+        <div>
+          <br />
+          <p>&nbsp &nbsp 
+          <button type="button" id="showcomments-{{item.id}}" onclick='getID({{item.id}})' class="btn btn-default col-md-offset-3" data-toggle="tooltip" data-placement="top" title="Interested? Leave a comment!">Show Comments</button>
+        </p>
+        </div>
+
+        <div id="{{item.id}}" style="display:none">
+          <div>
+            <textarea class="field span12" rows="2" maxlength="150" id="comment-content-{{item.id}}"></textarea> <br> <br>
+            <div class="comment-button">
+              <button onclick="addcomment({{item.id}})" class="btn btn-info offset7">
+                <i class="glyphicon glyphicon-comment"></i> Add Comment
+              </button>
+            </div>
+          </div>
+
+          <div id="comment-{{item.id}}">
+                <br>
+               <table class="table table-hover table-condensed">
+                {% for comment in item.comment_set.all %}
+                <tr>
+                    <td class="col-md-8 col-md-offset-0"><p class="comment-post">{{comment.text}}</p></td>
+                    <td class="col-md-3 col-md-offset-3"><a class="pull-left" href="{% url 'profile' comment.xchangeuser.user.id %}">
+                      <img class="img-circle" src="{% url 'photo' comment.xchangeuser.user.id %}" width="35px"> </a>
+                      <a href="{% url 'profile' comment.xchangeuser.user.id %}">&nbsp{{comment.xchangeuser.user}}</a> 
+                      <p>{{comment.created}}</p>
+                    </td>                               
+                </tr>  
+                {% endfor %}         
+              </table>          
+            
+          </div>
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<hr>
+{% endblock %}

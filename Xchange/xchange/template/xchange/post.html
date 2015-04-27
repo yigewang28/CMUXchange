@@ -1,0 +1,59 @@
+{% extends "xchange/base.html" %}
+
+{% block page-header %}
+<!-- <div class="jumbotron offset3 span12"> -->
+    <!-- <div class="page-header"> -->
+<div class="row-fluid">
+  <div class="span8 offset2">
+    <div class="hero-unit">
+      <center>
+      <h3>Hello, {{name}}!</h3>
+      <br />
+      <h4>Feel free to post anything within 160 characters, plus a photo of your item. </h4>
+      <h4>Your post will be public to all members of this community.</h4>
+      <center>
+    </div>
+  </div>
+</div> 
+{% endblock %}
+
+{% block content %}
+  <hr>
+    <div class="container">
+        <div class="row-fluid">
+            <div class="offset2 span9">
+            {% if inputErrors %}
+            <br>
+            {{inputErrors}}
+            <br>
+            {% endif %}
+              <form enctype="multipart/form-data" action="{% url 'post' %}" method="post">
+                {% csrf_token %}
+                <div>
+                  <h4>Item Name: </h4>
+                  <textarea id="status" class="field span10" rows="1" maxlength="160" name="itemname"></textarea> <br>
+                  <h4>Item Price: </h4>
+                  <textarea id="status" class="field span10" rows="1" maxlength="20" name="itemprice"></textarea> <br>
+                  <h4>Description: </h4>
+                  <textarea id="status" class="field span10" rows="10" maxlength="160" name="content"></textarea> <br>
+                   
+                   <h4>Tag:</h4>
+                   <input type="radio" name="tag" value="books">&nbsp Books &nbsp
+                   <input type="radio" name="tag" value="furnitures">&nbsp Furnitures &nbsp
+                   <input type="radio" name="tag" value="dorms">&nbsp Dorm Accessorries &nbsp
+                   <input type="radio" name="tag" value="electronics">&nbsp Electronics &nbsp
+                   <input type="radio" name="tag" value="clothing">&nbsp Clothing & Shoes &nbsp
+                   <input type="radio" name="tag" value="others">&nbsp Other &nbsp
+                   <br />
+                   <br />
+                   <h4>Upload a picture:</h4>
+                  <input type="file" name="itemphoto"><br />
+                  <span id="text_counter"></span> <br>
+                  <input class="btn btn-large btn-info offset8" type="submit" id="posting" name="post" value="Post" />
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

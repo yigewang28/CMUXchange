@@ -1,0 +1,25 @@
+{% extends "xchange/base.html" %}
+
+{% block page-header %}
+<div class="jumbotron offset2 span12">
+    <div class="page-header">
+      <center>
+      <h2>Welcome to CMU Xchange!</h2>
+      <h4>You are now one of us!</h4>
+    </center>
+    </div>
+</div> 
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row-fluid">
+    <div class="offset3 span8">
+		<p>
+		Thank you for confirming your email address.</p>
+		<p>Please <a href="{% url 'login' %}">login</a> to access your CMU Xchange account.
+		</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

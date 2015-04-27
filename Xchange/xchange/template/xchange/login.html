@@ -1,0 +1,43 @@
+{% extends "xchange/base.html" %}
+
+{% block page-header %}
+
+<div class="jumbotron offset2 span12">
+    <div class="page-header">
+        <center>
+        <h2>We are CMU Xchange!</h2>
+        <br>
+        <h4>An e-business platform for buyers and sellers from CMU.</h4>
+        <h4>Now log in and take a look!</h4>
+    </center>
+    </div>
+</div> 
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row-fluid">
+            <div class="offset4 span10">
+                <form method="post" class="centered" action="{% url 'django.contrib.auth.views.login' %}">
+                    <table>
+                    <tr>
+                        <td>{{ form.username.label_tag }}</td>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <td>{{ form.password.label_tag }}</td>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                    </table>
+                    <br>
+                    <button type="submit" class="btn btn-primary btn-lg offset2 span2">Log in</button> <br> <br>
+                    <a href="{% url 'register' %}" class="offset1 span6">No account yet? Click to register!</a>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
